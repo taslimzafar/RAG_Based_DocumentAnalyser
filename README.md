@@ -1,13 +1,16 @@
 # 📚 DocuRAG — Intelligent Document Q&A & Analysis System
 
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.40+-FF4B4B.svg?style=for-the-badge&logo=Streamlit&logoColor=white)](https://streamlit.io)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.40+-FF4B4B.svg?style=for-the-badge&logo=Streamlit&logoColor=white)](https://share.streamlit.io)
+[![Vercel](https://img.shields.io/badge/Vercel-Deployed-black.svg?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 [![Privacy](https://img.shields.io/badge/Privacy-100%25%20Local%20%26%20Offline-success.svg?style=for-the-badge)](https://github.com/taslimzafar/RAG_Based_DocumentAnalyser)
 
-**DocuRAG** is a lightweight, local Retrieval-Augmented Generation (RAG) and document intelligence application built with Python and Streamlit. It allows users to upload documents (PDF, DOCX, TXT, Markdown), ask natural-language questions, and receive source-grounded answers with exact chunk citations and relevance scoring.
+**DocuRAG** is a lightweight, local Retrieval-Augmented Generation (RAG) and document intelligence application. It allows users to upload documents (PDF, DOCX, TXT, Markdown), ask natural-language questions, and receive source-grounded answers with exact chunk citations and relevance scoring.
 
-The project runs **entirely offline** without third-party LLM API keys or cloud dependencies, making it safe for confidential, proprietary, or sensitive documentation.
+The application is **dual-runtime ready**:
+1. **🚀 Vercel Serverless Web App**: Native serverless deployment via `vercel.json` and `api/index.py`.
+2. **🎈 Streamlit Interactive App**: Rich multi-tab dashboard via `app.py` for local use and Streamlit Community Cloud.
 
 ---
 
@@ -19,7 +22,7 @@ The project runs **entirely offline** without third-party LLM API keys or cloud 
 - **🎯 Extractive Answer Synthesis**: Assembles answers strictly from matching sentences within high-confidence chunks, preventing hallucinations.
 - **🔍 Deep Chunk Inspector**: Inspect raw token counts, chunk splits, and preview individual snippets across uploaded files.
 - **📊 Evaluation & Dataset Analytics Dashboard**: Includes an interactive exploration panel with KPI metric cards, document distribution charts, and correlation analysis.
-- **🕒 Session History & Fast Prompts**: Quick-action query pills and session question tracking.
+- **☁️ Zero-Config Vercel & Streamlit Cloud Support**: Ready for seamless one-click production deployment.
 
 ---
 
@@ -43,82 +46,68 @@ flowchart TD
     subgraph Synthesis["3. Synthesis & UI"]
         G --> H[Extractive Sentence Synthesizer]
         G --> I[Confidence Scoring & Source Citations]
-        H --> J[Streamlit Interactive UI]
+        H --> J[Interactive UI: Vercel / Streamlit]
         I --> J
     end
 ```
 
 ---
 
-## 🖥️ UI Walkthrough
+## 🌐 Live Deployment Options
 
-The redesigned Streamlit application is organized into 4 intuitive tabs:
-
-1. **💬 Document Q&A**:
-   - Query input with preset prompts (*Summarize main purpose*, *Key findings*, *Requirements*).
-   - Styled synthesized answer card with confidence badge (High / Moderate / Weak).
-   - Source excerpts accordion featuring dynamic progress bars and chunk metadata.
-   - Session history to review prior questions.
-2. **🔍 Chunks & Corpus Inspector**:
-   - Total word count, average words per chunk, and file breakdown table.
-   - Interactive chunk viewer allowing slider-based inspection of individual snippets.
-3. **📊 Dataset Evaluation & Insights**:
-   - Metric cards: Total evaluation rows, unique documents, mean retrieval score, mean quality score.
-   - Dynamic bar charts: Rows by document type, mean quality by query type.
-   - Scatter plot with color gradient for chunk word counts.
-   - Interactive data table with CSV export.
-4. **ℹ️ Architecture & Pipeline**:
-   - Technical breakdown of the underlying parsing, chunking, and scoring algorithms.
+### Option A: Deploy on Vercel (Serverless)
+This repository is configured with `vercel.json` and `api/index.py` for zero-configuration Vercel deployment:
+1. Log in to [Vercel](https://vercel.com).
+2. Click **Add New...** > **Project** and import this repository (`taslimzafar/RAG_Based_DocumentAnalyser`).
+3. Leave all build settings as **Default** (Vercel automatically detects the Python runtime from `vercel.json`).
+4. Click **Deploy**. Your app will be live on a `*.vercel.app` URL in less than a minute!
 
 ---
 
-## 🚀 Quick Start Guide
-
-### Prerequisites
-- **Operating System**: Windows, macOS, or Linux
-- **Python**: Version 3.10, 3.11, or 3.12 installed
+### Option B: Deploy on Streamlit Community Cloud (Free & Native)
+1. Go to [share.streamlit.io](https://share.streamlit.io/) and sign in with GitHub.
+2. Click **New app**.
+3. Select your repository: `taslimzafar/RAG_Based_DocumentAnalyser`.
+4. Set Main file path: `app.py`.
+5. Click **Deploy**!
 
 ---
+
+## 🚀 Local Quick Start
 
 ### Windows (One-Click Launch)
-Simply double-click the **`run.bat`** script in the project root. It will:
-1. Create a `.venv` virtual environment if not present.
-2. Install all required dependencies.
-3. Automatically launch the Streamlit application at `http://localhost:8501`.
+Double-click **`run.bat`** in the project root folder. It will:
+1. Automatically create a virtual environment (`.venv`).
+2. Install all dependencies from `requirements.txt`.
+3. Launch the application locally at `http://localhost:8501`.
 
 ---
 
 ### Manual Setup (PowerShell / Terminal)
 
-#### 1. Clone the repository
 ```bash
+# 1. Clone repository
 git clone https://github.com/taslimzafar/RAG_Based_DocumentAnalyser.git
 cd RAG_Based_DocumentAnalyser
-```
 
-#### 2. Create and activate a virtual environment
-**Windows (PowerShell):**
-```powershell
+# 2. Create virtual environment
 python -m venv .venv
+
+# 3. Activate environment
+# On Windows:
 .\.venv\Scripts\Activate.ps1
-```
-
-**macOS / Linux:**
-```bash
-python3 -m venv .venv
+# On macOS/Linux:
 source .venv/bin/activate
-```
 
-#### 3. Install dependencies
-```bash
+# 4. Install dependencies
 pip install -r requirements.txt
-```
 
-#### 4. Run the application
-```bash
+# 5. Run Streamlit UI
 streamlit run app.py
+
+# Or run Vercel / Flask Serverless App locally:
+python api/index.py
 ```
-Open **`http://localhost:8501`** in your browser.
 
 ---
 
@@ -126,8 +115,11 @@ Open **`http://localhost:8501`** in your browser.
 
 ```text
 RAG_Based_DocumentAnalyser/
-├── app.py                  # Modern Streamlit UI, multi-tab layout, and dashboard
+├── api/
+│   └── index.py            # Vercel serverless Python application & modern web UI
+├── app.py                  # Full-featured Streamlit interactive multi-tab application
 ├── rag_core.py             # Core retrieval logic: parsing, chunking, lexical ranking
+├── vercel.json             # Vercel routing and deployment configuration
 ├── requirements.txt        # Python package dependencies
 ├── run.bat                 # One-click Windows launch script
 ├── README.md               # Documentation and architecture guide
@@ -155,7 +147,7 @@ Where:
 
 ---
 
-## 📊 Supplied Evaluation Dataset
+## 📊 Evaluation Dataset
 
 The included `data/dataset.csv` contains 500 evaluation records across 7 metadata columns:
 - `doc_id`: Unique document identifier.
@@ -165,15 +157,6 @@ The included `data/dataset.csv` contains 500 evaluation records across 7 metadat
 - `retrieval_score`: Baseline similarity metric.
 - `query_type`: Classification of user intent (`factoid`, `procedural`, `summary`).
 - `answer_quality_score`: Groundedness assessment metric (0.0 to 1.0).
-
----
-
-## 🔮 Future Enhancements & LLM Upgrades
-
-While designed as a deterministic local extractor, the architecture easily extends to generative LLM backends:
-- **Local Neural Embeddings**: Integrate `sentence-transformers` (e.g., `all-MiniLM-L6-v2`) for hybrid dense-lexical retrieval.
-- **Local Generative Models**: Connect to **Ollama** (`llama3`, `mistral`, `phi-3`) via local REST API for free-form synthesis.
-- **Cloud LLM Connectors**: Optional adapters for Gemini, OpenAI, or Claude.
 
 ---
 
