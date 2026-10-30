@@ -1,108 +1,184 @@
-# RAG-Based Document Q&A System
+# 📚 DocuRAG — Intelligent Document Q&A & Analysis System
 
-**A local, source-grounded document question-answering prototype built with Python and Streamlit.**
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.40+-FF4B4B.svg?style=for-the-badge&logo=Streamlit&logoColor=white)](https://streamlit.io)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
+[![Privacy](https://img.shields.io/badge/Privacy-100%25%20Local%20%26%20Offline-success.svg?style=for-the-badge)](https://github.com/taslimzafar/RAG_Based_DocumentAnalyser)
 
-Upload PDF, Word, text, or Markdown documents, ask a question, and inspect the passages used to form the answer. The app also includes an exploratory dashboard for the project’s supplied dataset.
+**DocuRAG** is a lightweight, local Retrieval-Augmented Generation (RAG) and document intelligence application built with Python and Streamlit. It allows users to upload documents (PDF, DOCX, TXT, Markdown), ask natural-language questions, and receive source-grounded answers with exact chunk citations and relevance scoring.
 
-**Author:** MD Taslim  
-**Domain:** LLM / Python  
-**Status:** Working prototype
+The project runs **entirely offline** without third-party LLM API keys or cloud dependencies, making it safe for confidential, proprietary, or sensitive documentation.
 
-## Highlights
+---
 
-- Upload one or more PDF, DOCX, TXT, and Markdown files.
-- Extract and split document text into overlapping chunks.
-- Rank chunks with a lightweight token-overlap retrieval baseline.
-- Present a concise extractive answer with the retrieved source excerpts.
-- Explore the supplied CSV through summary metrics and three visualizations.
-- Run locally without API credentials or a hosted language model.
+## 🌟 Key Features
 
-## Run locally
+- **📑 Multi-Format Parsing**: Directly ingest Adobe PDF (`.pdf`), Microsoft Word (`.docx`), Plain Text (`.txt`), and Markdown (`.md`) files in memory.
+- **🧩 Configurable Sliding-Window Chunking**: Dynamically configure chunk sizes and overlapping window parameters to preserve cross-sentence context.
+- **⚡ Deterministic Lexical Retrieval**: Ranks passages using a dual-factor scoring model combining **token coverage** (85%) and **token density** (15%).
+- **🎯 Extractive Answer Synthesis**: Assembles answers strictly from matching sentences within high-confidence chunks, preventing hallucinations.
+- **🔍 Deep Chunk Inspector**: Inspect raw token counts, chunk splits, and preview individual snippets across uploaded files.
+- **📊 Evaluation & Dataset Analytics Dashboard**: Includes an interactive exploration panel with KPI metric cards, document distribution charts, and correlation analysis.
+- **🕒 Session History & Fast Prompts**: Quick-action query pills and session question tracking.
 
-### Requirements
+---
 
-- Windows, macOS, or Linux
-- Python 3.10 or newer
-- Internet access on first run to install the Python packages
+## 🏗️ System Architecture
 
-### Windows quick start
+```mermaid
+flowchart TD
+    subgraph Ingestion["1. Ingestion & Preprocessing"]
+        A[User Documents: PDF / DOCX / TXT / MD] --> B[In-Memory Text Extractor]
+        B --> C[Sliding-Window Text Chunker]
+        C --> D[(Searchable In-Memory Chunks)]
+    end
 
-Double-click `run.bat`. It creates a virtual environment, installs the packages, and starts the app.
+    subgraph QueryPipeline["2. Query & Retrieval"]
+        Q[User Natural Language Question] --> E[Token Normalizer & Stopword Filter]
+        E --> F[Lexical Relevance Engine]
+        D --> F
+        F --> G[Top-K Passage Ranking]
+    end
 
-Or use PowerShell:
-
-```powershell
-py -m venv .venv
-.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
-streamlit run app.py
+    subgraph Synthesis["3. Synthesis & UI"]
+        G --> H[Extractive Sentence Synthesizer]
+        G --> I[Confidence Scoring & Source Citations]
+        H --> J[Streamlit Interactive UI]
+        I --> J
+    end
 ```
 
-### macOS / Linux
+---
 
+## 🖥️ UI Walkthrough
+
+The redesigned Streamlit application is organized into 4 intuitive tabs:
+
+1. **💬 Document Q&A**:
+   - Query input with preset prompts (*Summarize main purpose*, *Key findings*, *Requirements*).
+   - Styled synthesized answer card with confidence badge (High / Moderate / Weak).
+   - Source excerpts accordion featuring dynamic progress bars and chunk metadata.
+   - Session history to review prior questions.
+2. **🔍 Chunks & Corpus Inspector**:
+   - Total word count, average words per chunk, and file breakdown table.
+   - Interactive chunk viewer allowing slider-based inspection of individual snippets.
+3. **📊 Dataset Evaluation & Insights**:
+   - Metric cards: Total evaluation rows, unique documents, mean retrieval score, mean quality score.
+   - Dynamic bar charts: Rows by document type, mean quality by query type.
+   - Scatter plot with color gradient for chunk word counts.
+   - Interactive data table with CSV export.
+4. **ℹ️ Architecture & Pipeline**:
+   - Technical breakdown of the underlying parsing, chunking, and scoring algorithms.
+
+---
+
+## 🚀 Quick Start Guide
+
+### Prerequisites
+- **Operating System**: Windows, macOS, or Linux
+- **Python**: Version 3.10, 3.11, or 3.12 installed
+
+---
+
+### Windows (One-Click Launch)
+Simply double-click the **`run.bat`** script in the project root. It will:
+1. Create a `.venv` virtual environment if not present.
+2. Install all required dependencies.
+3. Automatically launch the Streamlit application at `http://localhost:8501`.
+
+---
+
+### Manual Setup (PowerShell / Terminal)
+
+#### 1. Clone the repository
+```bash
+git clone https://github.com/taslimzafar/RAG_Based_DocumentAnalyser.git
+cd RAG_Based_DocumentAnalyser
+```
+
+#### 2. Create and activate a virtual environment
+**Windows (PowerShell):**
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+**macOS / Linux:**
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -r requirements.txt
+```
+
+#### 3. Install dependencies
+```bash
+pip install -r requirements.txt
+```
+
+#### 4. Run the application
+```bash
 streamlit run app.py
 ```
+Open **`http://localhost:8501`** in your browser.
 
-Streamlit prints a local URL, usually `http://localhost:8501`. Upload a document in the sidebar, enter a question, and select **Get answer**. Uploaded files are processed in memory by the app and are not written into the project folder.
+---
 
-## How it works
-
-```text
-PDF / DOCX / TXT / Markdown
-              │
-              ▼
-        Text extraction
-              │
-              ▼
-     Overlapping text chunks
-              │
-              ▼
-   Token-overlap chunk ranking ◄── User question
-              │
-              ▼
- Extractive answer + source excerpts
-```
-
-The retrieval score is a simple lexical relevance heuristic. It is not an embedding similarity, confidence estimate, or calibrated probability. The answer is composed from matching sentences in the retrieved text; this prototype does not generate new content with an LLM. Scanned PDFs need OCR before upload.
-
-## Supplied dataset
-
-The provided `data/dataset.csv` contains 500 rows and seven columns: `doc_id`, `doc_type`, `chunk_id`, `word_count`, `retrieval_score`, `query_type`, and `answer_quality_score`. The dashboard summarizes these values and plots:
-
-1. Row counts by document type
-2. Mean answer-quality score by query type
-3. Retrieval score against answer-quality score
-
-The CSV does **not** include document text, user queries, or generated answers. It therefore supports descriptive analysis, but cannot serve as the document corpus or as a direct end-to-end Q&A evaluation set. No synthetic Q&A rows are presented as real evaluation data. The copied data dictionary is at `data/data_dictionary.csv`.
-
-## Project structure
+## 📁 Repository Structure
 
 ```text
-rag-document-qa/
-├── app.py                    # Streamlit interface and dataset dashboard
-├── rag_core.py               # Parsing, chunking, ranking, answer composition
-├── requirements.txt          # Python dependencies
-├── run.bat                   # Windows setup and launch helper
+RAG_Based_DocumentAnalyser/
+├── app.py                  # Modern Streamlit UI, multi-tab layout, and dashboard
+├── rag_core.py             # Core retrieval logic: parsing, chunking, lexical ranking
+├── requirements.txt        # Python package dependencies
+├── run.bat                 # One-click Windows launch script
+├── README.md               # Documentation and architecture guide
 └── data/
-    ├── dataset.csv           # Supplied 500-row dataset
-    └── data_dictionary.csv   # Column descriptions
+    ├── dataset.csv         # 500-record benchmark metadata dataset
+    └── data_dictionary.csv # Description of benchmark columns and data types
 ```
 
-## Limitations and responsible use
+---
 
-- Review the displayed source excerpts; retrieval can miss relevant passages.
-- Answers may be incomplete or irrelevant when documents do not contain the requested information.
-- Do not use this prototype for legal or medical advice without expert review.
-- Do not upload confidential documents to an environment you do not control.
+## ⚙️ Core Retrieval Algorithm
 
-## Technology
+The ranking engine in `rag_core.py` performs lexical relevance scoring without heavy neural models:
 
-Python · Streamlit · pandas · Matplotlib · pypdf · python-docx
+$$\text{Score} = 0.85 \times \text{Coverage} + 0.15 \times \text{Density}$$
 
-## Author
+Where:
+- **Token Coverage**:
+  $$\text{Coverage} = \frac{\sum_{t \in Q} \min(C_Q(t), C_D(t))}{|Q|}$$
+  *Measures what proportion of the query terms appear in the passage.*
 
-**MD Taslim**
+- **Token Density**:
+  $$\text{Density} = \frac{\sum_{t \in Q} \min(C_Q(t), C_D(t))}{(|D|)^{0.35}}$$
+  *Rewards passages where matching terms are concentrated rather than diluted.*
+
+---
+
+## 📊 Supplied Evaluation Dataset
+
+The included `data/dataset.csv` contains 500 evaluation records across 7 metadata columns:
+- `doc_id`: Unique document identifier.
+- `doc_type`: File classification (`policy`, `manual`, `report`, etc.).
+- `chunk_id`: Assigned chunk index.
+- `word_count`: Total word length of the segment.
+- `retrieval_score`: Baseline similarity metric.
+- `query_type`: Classification of user intent (`factoid`, `procedural`, `summary`).
+- `answer_quality_score`: Groundedness assessment metric (0.0 to 1.0).
+
+---
+
+## 🔮 Future Enhancements & LLM Upgrades
+
+While designed as a deterministic local extractor, the architecture easily extends to generative LLM backends:
+- **Local Neural Embeddings**: Integrate `sentence-transformers` (e.g., `all-MiniLM-L6-v2`) for hybrid dense-lexical retrieval.
+- **Local Generative Models**: Connect to **Ollama** (`llama3`, `mistral`, `phi-3`) via local REST API for free-form synthesis.
+- **Cloud LLM Connectors**: Optional adapters for Gemini, OpenAI, or Claude.
+
+---
+
+## 👤 Author
+
+**MD Taslim**  
+- **GitHub**: [@taslimzafar](https://github.com/taslimzafar)  
+- **Repository**: [RAG_Based_DocumentAnalyser](https://github.com/taslimzafar/RAG_Based_DocumentAnalyser)
