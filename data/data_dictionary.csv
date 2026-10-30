@@ -1,0 +1,8 @@
+column_name,data_type,sample_value_1,sample_value_2,sample_value_3,nullable,description_fill_in
+doc_id,object/numeric,DOC002,DOC034,DOC013,No,Identifier for the source document; repeated across chunks from the same document.
+doc_type,object/numeric,TXT,TXT,HTML,No,"File or content format for the source document (for example TXT, HTML, or Markdown)."
+chunk_id,object/numeric,CHK00001,CHK00002,CHK00003,No,Unique identifier for a document text chunk.
+word_count,object/numeric,457,302,52,No,Number of words in the associated chunk.
+retrieval_score,object/numeric,0.5962,0.7397,0.7735,No,Similarity or relevance score assigned to the retrieved chunk for a query; typically a value from 0 to 1.
+query_type,object/numeric,analytical,factual,comparative,No,"Category of the user query, such as factual, analytical, or comparative."
+answer_quality_score,object/numeric,0.942,0.976,0.66,No,Evaluation score for the answer quality; typically a value from 0 to 1.
